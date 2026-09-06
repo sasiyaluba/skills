@@ -1,6 +1,6 @@
 # skills
 
-A personal collection of agent skills managed with Git submodules.
+A personal collection of agent skills managed with Git submodules and vendored sources.
 
 ## Install
 
@@ -18,4 +18,4 @@ cd skills
 ./update.sh
 ```
 
-This pulls the repository when an upstream is configured, updates every skill submodule from its remote default branch, and refreshes the agent links.
+This pulls the repository when an upstream is configured, updates every skill submodule from its remote default branch, refreshes the vendored Web3 skills from `DarkNavySecurity/web3-skills`, and updates the agent links.

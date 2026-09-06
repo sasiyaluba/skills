@@ -1,9 +1,6 @@
 [submodule "mattpocock-skills"]
 	path = mattpocock-skills
 	url = https://github.com/mattpocock/skills.git
-[submodule "web3-skills"]
-	path = web3-skills
-	url = https://github.com/DarkNavySecurity/web3-skills.git
 [submodule "thinking-partner"]
 	path = thinking-partner
 	url = https://github.com/mattnowdev/thinking-partner.git
