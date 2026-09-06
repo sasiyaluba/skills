@@ -18,4 +18,4 @@ cd skills
 ./update.sh
 ```
 
-This pulls the repository when an upstream is configured, updates every skill submodule from its remote default branch, refreshes the vendored Web3 skills from `DarkNavySecurity/web3-skills`, and updates the agent links.
+This pulls the repository when an upstream is configured, updates every skill submodule, merges `DarkNavySecurity/web3-skills` into the customized `sasiyaluba/web3-skills` fork, refreshes the three vendored Web3 skills, and updates the agent links. A merge conflict stops the update without replacing the installed skills.

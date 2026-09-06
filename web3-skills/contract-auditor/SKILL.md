@@ -3,6 +3,7 @@ name: contract-auditor
 description: >
   Use when auditing Solidity contracts for security vulnerabilities.
   Trigger on "audit", "check this contract", "review for security", or "/contract-auditor".
+disable-model-invocation: true
 ---
 
 # Smart Contract Security Audit

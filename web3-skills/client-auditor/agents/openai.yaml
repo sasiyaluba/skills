@@ -1,0 +1,5 @@
+interface:
+  display_name: "Client Auditor"
+  short_description: "Audit blockchain clients"
+policy:
+  allow_implicit_invocation: false

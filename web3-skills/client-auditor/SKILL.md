@@ -4,6 +4,7 @@ description: >
   Use when auditing, reviewing, or finding vulnerabilities in a blockchain node,
   execution client, consensus client, or any Go/Rust/C++ codebase with P2P networking,
   consensus logic, RPC handlers, or bridge components.
+disable-model-invocation: true
 allowed-tools: Read, Grep, Glob, Bash, Agent, Write, Edit
 metadata:
   argument-hint: "start [path] | verify [path] [deep] | report [path]"

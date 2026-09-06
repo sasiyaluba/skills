@@ -1,0 +1,5 @@
+interface:
+  display_name: "Contract Auditor"
+  short_description: "Audit Solidity contracts"
+policy:
+  allow_implicit_invocation: false
