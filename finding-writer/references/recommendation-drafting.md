@@ -2,6 +2,10 @@
 
 基于完整的 `Fact Brief` 和 `Terminology Brief`，并在已有 Impact Assessment 时先验证 Finding Type 兼容性，编写可直接进入审计报告的 Recommendation。最终 Finding 使用英文；本文件定义从上游分析结果到最终文本的通用推导方法，不重新调查事实、夸大后果或搜索术语。
 
+### Finding Polisher compatibility
+
+由 `finding-polisher` 调用时，`Content Lock` 替代 `Fact Brief` 和已有的可选 Impact Assessment 输入，`Terminology Brief` 的职责不变。下文所有事实来源、Evidence、类型兼容性和语义一致性规则均对 `Content Lock` 执行。任何需要调查、评估、重新分类或新增实质内容的情况返回 `POLISH_DRAFTING_BLOCKED`，不得返回上游流程、修改已确认类型或补充原 Finding 没有的 Impact。
+
 ## 1. Recommendation 的边界
 
 Recommendation 请求一项具体改进，但现有事实没有建立具体的安全属性违反和不利安全后果。它通常改善标准符合性、防御性验证、健壮性、一致性、可维护性、可观测性、可用性、集成体验或执行效率。

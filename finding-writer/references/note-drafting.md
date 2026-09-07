@@ -10,6 +10,10 @@
 
 2026 年 1 月至 8 月的 94 份报告中，共检查了 339 个带 `\subsection` 的 Note 叶子文件：336 个由报告清单引用的最终 Note、2 个与已引用内容重复的孤立叶子，以及 1 个只有省略号的未完成孤立占位文件。下文只从 336 个报告实际采用的 Note 提炼稳定规则；孤立文件只用于核对覆盖范围，不作为独立先例。历史文件中的类型混淆、泛化标题、命令式措辞和无边界风险描述只作为反例，不构成优先于本文件的先例。
 
+### Finding Polisher compatibility
+
+由 `finding-polisher` 调用时，`Content Lock` 替代 `Fact Brief` 和已有的可选 Impact Assessment 输入，`Terminology Brief` 的职责不变。下文所有事实来源、Evidence、接受依据、类型兼容性和语义一致性规则均对 `Content Lock` 执行。任何需要调查、评估、重新分类或新增实质内容的情况返回 `POLISH_DRAFTING_BLOCKED`，不得返回上游流程、修改已确认类型或补充原 Finding 没有的保证、假设或条件性后果。
+
 ## 1. Note 的类型边界
 
 Note 披露一个**已经存在且已被接受的安全相关上下文**。典型对象包括：

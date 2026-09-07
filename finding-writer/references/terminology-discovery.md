@@ -2,6 +2,8 @@
 
 基于用户输入、`Fact Brief` 和已有的可选 `Impact Brief`，全面搜索能够准确描述当前 Finding 的专业术语。
 
+由 `finding-polisher` 调用时，原 Finding 和 `Content Lock` 分别替代用户 raw finding 与 Brief 输入。此时只研究 `Content Lock` 已有概念的表达，不得增加、删除或改变事实、条件、因果、Impact、修复目标或 Code locations；下文对 `Fact Brief`、`Impact Brief` 和“已确认内容”的引用均按此替代关系解释。
+
 搜索应覆盖：
 
 - 项目及依赖的官方文档；

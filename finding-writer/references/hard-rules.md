@@ -10,15 +10,20 @@
 
 ## 1. 适用范围
 
-最终优化器只处理已经完成分类、分析、术语研究和 drafting 的 Finding。它接收：
+最终优化器只处理已经确认 Finding Type、完成术语研究和 drafting 的 Finding。它接收：
 
 - 已选定的 Finding Type；
-- Authoritative Brief Set；
+- Authoritative Content Set；
 - `Terminology Brief`；
 - selected branch 的输出契约；
 - 完整 Draft。
 
-`Authoritative Brief Set` 由已确认的 Finding Type、`Fact Brief`、已有的可选 `Impact Brief`，以及审计人员明确确认的控制性决定组成。下文单独写 `Brief` 时，均指这一集合。
+`Authoritative Content Set` 必须恰好采用以下一种形式：
+
+- `finding-writer` 提供的 `Authoritative Brief Set`，由已确认的 Finding Type、`Fact Brief`、已有的可选 `Impact Brief`，以及审计人员明确确认的控制性决定组成；
+- `finding-polisher` 提供的 `Content Lock`，由已确认的 Finding Type 和原 Finding 的无损语义快照组成。
+
+下文单独写 `Brief` 或 `Authoritative Brief Set` 时，均指当前调用采用的 `Authoritative Content Set`。使用 `Content Lock` 时，原 Finding 已有内容是唯一语义来源；需要调查、评估、重新分类或新增实质内容的返回上游信号必须改为 `POLISH_BLOCKED`。
 
 最终优化器的职责只有两项：
 

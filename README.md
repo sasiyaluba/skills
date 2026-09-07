@@ -19,7 +19,7 @@ A curated collection of engineering, security, reasoning, and productivity skill
 
 ## Skill catalog
 
-The installer currently discovers **42 skills**. Every directory containing a `SKILL.md` is installed.
+The installer currently discovers **43 skills**. Every directory containing a `SKILL.md` is installed.
 
 ### Security and incident response
 
@@ -29,6 +29,7 @@ The installer currently discovers **42 skills**. Every directory containing a `S
 | `client-auditor` | Review blockchain nodes, execution clients, consensus clients, bridges, P2P code, and RPC surfaces. |
 | `exploit-investigator` | Investigate an on-chain incident from a transaction hash and chain. |
 | `finding-writer` | Convert one raw audit finding into a repository-grounded issue, recommendation, or note. |
+| `finding-polisher` | Polish a complete audit finding without changing its confirmed content. |
 
 ### Engineering workflow
 
@@ -158,4 +159,4 @@ If the Web3 fork is behind upstream, the script merges and pushes the updated fo
 - [`mattpocock/skills`](https://github.com/mattpocock/skills): engineering and productivity workflows.
 - [`DarkNavySecurity/web3-skills`](https://github.com/DarkNavySecurity/web3-skills): Web3 auditing and exploit investigation, maintained here through a customized fork.
 - [`sasiyaluba/thinking-partner`](https://github.com/sasiyaluba/thinking-partner): structured decision support and mental models.
-- Local additions: `finding-writer`, shared agent instructions, installation, and update automation.
+- Local additions: `finding-writer`, `finding-polisher`, shared agent instructions, installation, and update automation.

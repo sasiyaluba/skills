@@ -2,6 +2,10 @@
 
 基于完整的 `Fact Brief`、已经确认的 `Impact Brief` 和完整的 `Terminology Brief`，编写可直接进入审计报告的 Security Issue。最终 Finding 使用英文；本文件定义从三个 Brief 到最终文本的通用推导方法，不重新调查事实、评估 Impact 或搜索术语。
 
+### Finding Polisher compatibility
+
+由 `finding-polisher` 调用时，`Content Lock` 同时替代 `Fact Brief` 和 `Impact Brief`，原 Finding 中的 Impact 是唯一 Impact 来源，`Terminology Brief` 的职责不变。下文所有 Brief 完整性、映射、Evidence 和语义一致性规则均对 `Content Lock` 执行；Severity 不属于润色输出，`Content Lock` 未提供 Severity 时既不补充也不阻塞。任何需要调查、评估、分类或新增实质内容的情况返回 `POLISH_DRAFTING_BLOCKED`，不得返回上游流程或修改已确认类型。
+
 ## 1. 输入边界
 
 写作前必须同时读取：
