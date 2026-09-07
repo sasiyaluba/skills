@@ -26,6 +26,23 @@ archive_directory() {
   printf 'Archived %s at %s\n' "$archive_source" "$backup_root/$archive_label"
 }
 
+link_agent_instructions() {
+  agent_name=$1
+  instructions_file=$2
+  instructions_source=$repo_dir/AGENTS.md
+  instructions_dir=${instructions_file%/*}
+
+  if [ -L "$instructions_file" ] && [ "$(readlink "$instructions_file")" = "$instructions_source" ]; then
+    printf 'Kept %s instructions link at %s\n' "$agent_name" "$instructions_file"
+    return 0
+  fi
+
+  archive_directory "${agent_name}-instructions" "$instructions_file"
+  mkdir -p "$instructions_dir"
+  ln -s "$instructions_source" "$instructions_file"
+  printf 'Linked %s instructions at %s\n' "$agent_name" "$instructions_file"
+}
+
 reset_exclusive_skills_directory() {
   agent_name=$1
   skills_dir=$2
@@ -188,17 +205,19 @@ register_agent() {
   executable=$2
   agent_home=$3
   skills_dir=$4
+  instructions_file=$5
 
   if command -v "$executable" >/dev/null 2>&1 || [ -d "$agent_home" ]; then
-    printf '%s|%s\n' "$agent_name" "$skills_dir" >> "$agents_manifest"
+    printf '%s|%s|%s\n' "$agent_name" "$skills_dir" "$instructions_file" >> "$agents_manifest"
   else
     printf 'Skipped %s: agent not installed\n' "$agent_name"
   fi
 }
 
-register_agent Codex codex "$HOME/.codex" "$HOME/.codex/skills"
-register_agent OMP omp "$HOME/.omp" "$HOME/.omp/agent/skills"
-register_agent Pi pi "$HOME/.pi" "$HOME/.pi/agent/skills"
+register_agent Codex codex "$HOME/.codex" "$HOME/.codex/skills" "$HOME/.codex/AGENTS.md"
+register_agent OMP omp "$HOME/.omp" "$HOME/.omp/agent/skills" "$HOME/.omp/agent/AGENTS.md"
+register_agent Pi pi "$HOME/.pi" "$HOME/.pi/agent/skills" "$HOME/.pi/agent/AGENTS.md"
+register_agent "Claude Code" claude "$HOME/.claude" "$HOME/.claude/skills" "$HOME/.claude/CLAUDE.md"
 
 if [ ! -s "$agents_manifest" ]; then
   printf 'No supported agents detected; nothing to install.\n'
@@ -209,7 +228,8 @@ declared_name() {
   sed -n 's/^name:[[:space:]]*//p' "$1/SKILL.md" | sed -n '1p'
 }
 
-while IFS='|' read -r agent_name skills_dir; do
+while IFS='|' read -r agent_name skills_dir instructions_file; do
+  link_agent_instructions "$agent_name" "$instructions_file"
   case "$agent_name" in
     Codex|OMP|Pi) reset_exclusive_skills_directory "$agent_name" "$skills_dir" ;;
     *) mkdir -p "$skills_dir" ;;
