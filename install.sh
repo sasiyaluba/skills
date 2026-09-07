@@ -11,6 +11,96 @@ tmp_dir=$(mktemp -d "${TMPDIR:-/tmp}/tao-skills.XXXXXX")
 trap 'rm -rf "$tmp_dir"' EXIT HUP INT TERM
 skills_manifest="$tmp_dir/skills"
 agents_manifest="$tmp_dir/agents"
+make_web3_skill_user_invoked() {
+  skill_dir=$1
+  skill_name=${skill_dir##*/}
+  skill_file=$skill_dir/SKILL.md
+  openai_file=$skill_dir/agents/openai.yaml
+  frontmatter_tmp=$tmp_dir/$skill_name.SKILL.md
+  openai_tmp=$tmp_dir/$skill_name.openai.yaml
+
+  if [ ! -f "$skill_file" ]; then
+    printf 'Web3 skill definition not found: %s\n' "$skill_file" >&2
+    exit 1
+  fi
+
+  awk '
+    NR == 1 && $0 == "---" { in_frontmatter = 1; print; next }
+    in_frontmatter && /^disable-model-invocation:/ {
+      if (!seen_disable) print "disable-model-invocation: true"
+      seen_disable = 1
+      next
+    }
+    in_frontmatter && /^hide:/ {
+      if (!seen_hide) print "hide: true"
+      seen_hide = 1
+      next
+    }
+    in_frontmatter && $0 == "---" {
+      if (!seen_disable) print "disable-model-invocation: true"
+      if (!seen_hide) print "hide: true"
+      in_frontmatter = 0
+    }
+    { print }
+  ' "$skill_file" > "$frontmatter_tmp"
+  cat "$frontmatter_tmp" > "$skill_file"
+
+  mkdir -p "$skill_dir/agents"
+  if [ -f "$openai_file" ]; then
+    awk '
+      /^policy:[[:space:]]*$/ {
+        seen_policy = 1
+        in_policy = 1
+        print
+        next
+      }
+      in_policy && /^[^[:space:]#]/ {
+        if (!seen_allow) print "  allow_implicit_invocation: false"
+        in_policy = 0
+      }
+      in_policy && /^[[:space:]]+allow_implicit_invocation:/ {
+        if (!seen_allow) print "  allow_implicit_invocation: false"
+        seen_allow = 1
+        next
+      }
+      { print }
+      END {
+        if (in_policy && !seen_allow) print "  allow_implicit_invocation: false"
+        if (!seen_policy) {
+          print "policy:"
+          print "  allow_implicit_invocation: false"
+        }
+      }
+    ' "$openai_file" > "$openai_tmp"
+  else
+    printf 'policy:\n  allow_implicit_invocation: false\n' > "$openai_tmp"
+  fi
+  cat "$openai_tmp" > "$openai_file"
+}
+
+migrate_legacy_omp_web3_directory() {
+  config_file=$HOME/.omp/agent/config.yml
+  legacy_dir=$HOME/.agents/web3-skills
+  managed_dir=$repo_dir/web3-skills
+  migrated_config=$tmp_dir/omp-config.yml
+
+  [ -f "$config_file" ] || return 0
+
+  awk -v legacy_dir="$legacy_dir" -v managed_dir="$managed_dir" '
+    $0 == "    - " legacy_dir { print "    - " managed_dir; next }
+    { print }
+  ' "$config_file" > "$migrated_config"
+
+  if ! cmp -s "$config_file" "$migrated_config"; then
+    cat "$migrated_config" > "$config_file"
+    printf 'Replaced legacy OMP Web3 skill directory with %s\n' "$managed_dir"
+  fi
+}
+
+for skill_name in client-auditor contract-auditor exploit-investigator; do
+  make_web3_skill_user_invoked "$repo_dir/web3-skills/$skill_name"
+done
+migrate_legacy_omp_web3_directory
 
 : > "$skills_manifest"
 for skill_root in \
