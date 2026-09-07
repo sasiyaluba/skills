@@ -11,6 +11,51 @@ tmp_dir=$(mktemp -d "${TMPDIR:-/tmp}/tao-skills.XXXXXX")
 trap 'rm -rf "$tmp_dir"' EXIT HUP INT TERM
 skills_manifest="$tmp_dir/skills"
 agents_manifest="$tmp_dir/agents"
+backup_root=$HOME/.local/share/sasiyaluba-skills-backups/$(date +%Y%m%d-%H%M%S)-$$
+
+archive_directory() {
+  archive_label=$1
+  archive_source=$2
+
+  if [ ! -e "$archive_source" ] && [ ! -L "$archive_source" ]; then
+    return 0
+  fi
+
+  mkdir -p "$backup_root"
+  mv "$archive_source" "$backup_root/$archive_label"
+  printf 'Archived %s at %s\n' "$archive_source" "$backup_root/$archive_label"
+}
+
+reset_exclusive_skills_directory() {
+  agent_name=$1
+  skills_dir=$2
+  contains_regular_entry=0
+
+  if [ -d "$skills_dir" ]; then
+    for existing in "$skills_dir"/* "$skills_dir"/.[!.]* "$skills_dir"/..?*; do
+      if { [ -e "$existing" ] || [ -L "$existing" ]; } && [ ! -L "$existing" ]; then
+        contains_regular_entry=1
+        break
+      fi
+    done
+
+    if [ "$contains_regular_entry" -eq 1 ]; then
+      archive_directory "${agent_name}-skills" "$skills_dir"
+    else
+      rm -rf "$skills_dir"
+    fi
+  elif [ -e "$skills_dir" ] || [ -L "$skills_dir" ]; then
+    archive_directory "${agent_name}-skills" "$skills_dir"
+  fi
+
+  mkdir -p "$skills_dir"
+}
+
+archive_shared_skill_roots() {
+  archive_directory shared-agent-skills "$HOME/.agents/skills"
+  archive_directory shared-web3-skills "$HOME/.agents/web3-skills"
+}
+
 make_web3_skill_user_invoked() {
   skill_dir=$1
   skill_name=${skill_dir##*/}
@@ -84,6 +129,7 @@ migrate_legacy_omp_web3_directory() {
   managed_dir=$repo_dir/web3-skills
   migrated_config=$tmp_dir/omp-config.yml
 
+
   [ -f "$config_file" ] || return 0
 
   awk -v legacy_dir="$legacy_dir" -v managed_dir="$managed_dir" '
@@ -101,6 +147,7 @@ for skill_name in client-auditor contract-auditor exploit-investigator; do
   make_web3_skill_user_invoked "$repo_dir/web3-skills/$skill_name"
 done
 migrate_legacy_omp_web3_directory
+archive_shared_skill_roots
 
 : > "$skills_manifest"
 for skill_root in \
@@ -150,7 +197,6 @@ register_agent() {
 }
 
 register_agent Codex codex "$HOME/.codex" "$HOME/.codex/skills"
-register_agent Claude claude "$HOME/.claude" "$HOME/.claude/skills"
 register_agent OMP omp "$HOME/.omp" "$HOME/.omp/agent/skills"
 register_agent Pi pi "$HOME/.pi" "$HOME/.pi/agent/skills"
 
@@ -164,7 +210,10 @@ declared_name() {
 }
 
 while IFS='|' read -r agent_name skills_dir; do
-  mkdir -p "$skills_dir"
+  case "$agent_name" in
+    Codex|OMP|Pi) reset_exclusive_skills_directory "$agent_name" "$skills_dir" ;;
+    *) mkdir -p "$skills_dir" ;;
+  esac
   installed=0
 
   while IFS= read -r skill_file; do
