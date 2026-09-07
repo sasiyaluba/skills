@@ -13,6 +13,14 @@ Use tools to improve correctness and grounding without minimizing calls at the e
 - Start with focused paths, queries, and ranges while preserving the complete relevant construct and enough surrounding context to reason correctly.
 - Expand the scope when the current evidence is insufficient or omitted information could change the decision.
 
+## Web research
+
+- When a conclusion depends on current information, external facts, unfamiliar technical details, or information unavailable in the repository, MUST use web search rather than relying on memory or unsupported inference.
+- Search far enough to resolve the material uncertainty. Prefer primary sources such as official documentation, standards, papers, release notes, and upstream source code; corroborate consequential claims when practical.
+- Treat search-result snippets as leads, not evidence. Read the underlying source before relying on it.
+- Do not search when repository contents, tool output, or a known authoritative URL can answer the question directly.
+- When web research remains inconclusive, state what could not be verified and distinguish sourced facts from inference.
+
 ## Bounded output
 
 - For potentially large files, logs, or search results, prefer available filters, path scopes, line ranges, pagination, result limits, or concise output modes.
