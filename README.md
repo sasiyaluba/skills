@@ -29,7 +29,7 @@ The installer currently discovers **43 skills**. Every directory containing a `S
 | `client-auditor` | Review blockchain nodes, execution clients, consensus clients, bridges, P2P code, and RPC surfaces. |
 | `exploit-investigator` | Investigate an on-chain incident from a transaction hash and chain. |
 | `finding-writer` | Convert one raw audit finding into a repository-grounded issue, recommendation, or note. |
-| `finding-polisher` | Polish a complete audit finding without changing its confirmed content. |
+| `finding-polisher` | Convert an audit finding in any structure into the standard report format without changing its confirmed meaning. |
 
 ### Engineering workflow
 

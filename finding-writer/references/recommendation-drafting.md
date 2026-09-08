@@ -4,7 +4,7 @@
 
 ### Finding Polisher compatibility
 
-由 `finding-polisher` 调用时，`Content Lock` 替代 `Fact Brief` 和已有的可选 Impact Assessment 输入，`Terminology Brief` 的职责不变。下文所有事实来源、Evidence、类型兼容性和语义一致性规则均对 `Content Lock` 执行。任何需要调查、评估、重新分类或新增实质内容的情况返回 `POLISH_DRAFTING_BLOCKED`，不得返回上游流程、修改已确认类型或补充原 Finding 没有的 Impact。
+由 `finding-polisher` 调用时，格式无关的 `Content Lock` 替代 `Fact Brief` 和已有的可选 Impact Assessment 输入，`Terminology Brief` 的职责不变。输入的标题、字段、顺序和格式不构成输出约束；先从语义单位建立 Recommendation Map，再按本文件的字段职责和标准格式重新分配内容。下文所有事实来源、Evidence、类型兼容性和语义一致性规则均对 `Content Lock` 执行。任何需要调查、评估、重新分类或新增实质内容的情况返回 `POLISH_DRAFTING_BLOCKED`，不得返回上游流程、修改已确认类型或补充输入没有的 Impact。
 
 ## 1. Recommendation 的边界
 

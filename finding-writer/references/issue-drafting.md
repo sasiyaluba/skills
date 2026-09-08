@@ -4,7 +4,7 @@
 
 ### Finding Polisher compatibility
 
-由 `finding-polisher` 调用时，`Content Lock` 同时替代 `Fact Brief` 和 `Impact Brief`，原 Finding 中的 Impact 是唯一 Impact 来源，`Terminology Brief` 的职责不变。下文所有 Brief 完整性、映射、Evidence 和语义一致性规则均对 `Content Lock` 执行；Severity 不属于润色输出，`Content Lock` 未提供 Severity 时既不补充也不阻塞。任何需要调查、评估、分类或新增实质内容的情况返回 `POLISH_DRAFTING_BLOCKED`，不得返回上游流程或修改已确认类型。
+由 `finding-polisher` 调用时，格式无关的 `Content Lock` 同时替代 `Fact Brief` 和 `Impact Brief`，输入内容中的 Impact 是唯一 Impact 来源，`Terminology Brief` 的职责不变。输入的标题、字段、顺序和格式不构成输出约束；先从语义单位建立 Issue Map，再按本文件的字段职责和标准格式重新分配内容。下文所有 Brief 完整性、映射、Evidence 和语义一致性规则均对 `Content Lock` 执行；Severity 不属于润色输出，`Content Lock` 未提供 Severity 时既不补充也不阻塞。任何需要调查、评估、分类或新增实质内容的情况返回 `POLISH_DRAFTING_BLOCKED`，不得返回上游流程或修改已确认类型。
 
 ## 1. 输入边界
 
