@@ -1,6 +1,6 @@
 # Tao Skills
 
-[![Skills](https://img.shields.io/badge/skills-42-5b5bd6?style=for-the-badge)](#skill-catalog)
+[![Skills](https://img.shields.io/badge/skills-44-5b5bd6?style=for-the-badge)](#skill-catalog)
 [![Agents](https://img.shields.io/badge/agents-Codex%20%7C%20Claude%20Code%20%7C%20OMP%20%7C%20Pi-111827?style=for-the-badge)](#install)
 [![Install](https://img.shields.io/badge/install-one_script-16a34a?style=for-the-badge)](#install)
 
@@ -19,12 +19,13 @@ A curated collection of engineering, security, reasoning, and productivity skill
 
 ## Skill catalog
 
-The installer currently discovers **43 skills**. Every directory containing a `SKILL.md` is installed.
+The installer currently discovers **44 skills**. Every directory containing a `SKILL.md` is installed.
 
 ### Security and incident response
 
 | Skill | What it is for |
 | --- | --- |
+| `code-audit` | Run exhaustive, risk-oriented audits across supported smart-contract and service codebases; manual invocation only. |
 | `contract-auditor` | Audit Solidity contracts for exploitable security issues. |
 | `client-auditor` | Review blockchain nodes, execution clients, consensus clients, bridges, P2P code, and RPC surfaces. |
 | `exploit-investigator` | Investigate an on-chain incident from a transaction hash and chain. |
@@ -150,12 +151,13 @@ TAO_SKILLS_SKIP_SUBMODULE_UPDATE=1 ./install.sh
 ./update.sh
 ```
 
-`update.sh` pulls the main repository when an upstream branch is configured, updates all skill submodules, merges `DarkNavySecurity/web3-skills` into the customized `sasiyaluba/web3-skills` fork, refreshes the three vendored Web3 skills, and runs the installer again.
+`update.sh` pulls the main repository when an upstream branch is configured, updates Code Audit and all other skill submodules, merges `DarkNavySecurity/web3-skills` into the customized `sasiyaluba/web3-skills` fork, refreshes the three vendored Web3 skills, and runs the installer again.
 
 If the Web3 fork is behind upstream, the script merges and pushes the updated fork. A merge conflict stops the update and preserves the temporary checkout for manual resolution.
 
 ## Sources
 
+- [`QLYZWD/code-audit`](https://github.com/QLYZWD/code-audit): risk-oriented security audit orchestration, installed for manual invocation only.
 - [`mattpocock/skills`](https://github.com/mattpocock/skills): engineering and productivity workflows.
 - [`DarkNavySecurity/web3-skills`](https://github.com/DarkNavySecurity/web3-skills): Web3 auditing and exploit investigation, maintained here through a customized fork.
 - [`sasiyaluba/thinking-partner`](https://github.com/sasiyaluba/thinking-partner): structured decision support and mental models.

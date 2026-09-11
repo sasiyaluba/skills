@@ -170,6 +170,7 @@ archive_shared_skill_roots
 for skill_root in \
   "$repo_dir/finding-writer" \
   "$repo_dir/finding-polisher" \
+  "$repo_dir/code-audit" \
   "$repo_dir/mattpocock-skills/skills" \
   "$repo_dir/web3-skills" \
   "$repo_dir/thinking-partner/skills"

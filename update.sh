@@ -52,4 +52,4 @@ mv "$vendored" "$repo_dir/web3-skills"
 
 TAO_SKILLS_SKIP_SUBMODULE_UPDATE=1 "$repo_dir/install.sh"
 
-printf 'Submodules and vendored Web3 skills are at their latest remote revisions.\n'
+printf 'Code Audit, other submodules, and vendored Web3 skills are at their latest remote revisions.\n'
