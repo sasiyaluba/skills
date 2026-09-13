@@ -1,73 +1,99 @@
 ---
 name: finding-polisher
-description: Use when an auditor provides a Security Issue, Recommendation, or Note in any structure and wants it converted into the standard report format with polished English and unchanged meaning.
+description: Use when an auditor wants to standardize or polish an existing Security Issue, Recommendation, or Note, including revising it from explicit auditor feedback without repository grounding.
 ---
 
 # Finding Polisher
 
-把任意结构的 Finding 转换并润色为可直接进入报告的标准 Finding。模块的唯一外部 Interface 是：
+Convert a Finding in any structure into a polished, report-ready standard Finding. The skill can also revise an existing Finding according to explicit auditor feedback. The module's only external Interface is:
 
 ```text
-finding content in any format + confirmed finding type -> standardized semantically equivalent finding
+finding content in any format + confirmed finding type + optional auditor revision instructions -> standardized finding reflecting the latest explicit auditor decisions
 ```
 
-本流程不要求输入使用任何字段、顺序、模板或标记格式，也不保留输入的 presentation structure。它不调查仓库、不重新分类、不评估 Impact 或 Severity；输入内容是全部实质语义的唯一权威，selected branch 决定标准输出结构。
+The input does not need to use any fields, ordering, template, or markup, and the output does not preserve its presentation structure. This workflow does not investigate the repository, reclassify the Finding, or assess Impact or Severity. The original Finding supplies the baseline semantics, explicit revision instructions override only the content they directly target, the resolved effective semantics determine the output, and the selected branch determines the standard output structure.
 
 ## References
 
-| 阶段 | Reference | 读取条件 |
+| Stage | Reference | Read when |
 | --- | --- | --- |
-| 术语发现 | `skill://finding-writer/references/terminology-discovery.md` | 每个 Finding |
-| Security Issue drafting | `skill://finding-writer/references/issue-drafting.md` | 仅 Security Issue |
-| Recommendation drafting | `skill://finding-writer/references/recommendation-drafting.md` | 仅 Recommendation |
-| Note drafting | `skill://finding-writer/references/note-drafting.md` | 仅 Note |
-| 最终优化 | `skill://finding-writer/references/hard-rules.md` | 每个完整 Draft |
+| Terminology discovery | `skill://finding-writer/references/terminology-discovery.md` | Every Finding |
+| Security Issue drafting | `skill://finding-writer/references/issue-drafting.md` | Security Issue only |
+| Recommendation drafting | `skill://finding-writer/references/recommendation-drafting.md` | Recommendation only |
+| Note drafting | `skill://finding-writer/references/note-drafting.md` | Note only |
+| Final optimization | `skill://finding-writer/references/hard-rules.md` | Every complete Draft |
 
-只读取当前阶段和已确认类型要求的 Reference。不得读取 finding grounding、impact assessment 或未选 drafting 分支。
+Read only the reference required by the current stage and confirmed Finding Type. Do not read finding grounding, impact assessment, or an unselected drafting branch.
 
 ## Authority
 
-- 输入 Finding 决定 Finding Type 以外的全部实质内容，但不决定输出字段、顺序或格式；
-- 审计人员确认的 Finding Type 决定 selected drafting branch；
-- `Content Lock` 是输入 Finding 的格式无关语义清单，决定事实、关系、条件、确定性、Impact、修复目标和证据，不记录或保护原 presentation structure；
-- `Terminology Brief` 只决定更准确的专业术语及其适用边界；
-- selected drafting reference 决定如何把已锁定内容分配至标准字段，并决定字段职责、比例和输出格式；
-- `hard-rules.md` 决定最终共享格式和表达。
+- The original Finding determines all substantive content not overridden by revision instructions, but it does not determine output fields, ordering, or formatting.
+- The auditor's latest explicit revision instruction takes precedence over the original Finding content it directly targets. Untargeted content remains locked.
+- The single Finding Type confirmed by the auditor determines the selected drafting branch. A latest explicit instruction that changes the type also constitutes confirmation of the new type.
+- The `Content Lock` records the original semantics, revision instructions, supersession relationships, and final effective semantics. Its `semantic_units` are the only Authoritative Content Set for downstream stages.
+- The `Terminology Brief` determines only more accurate professional terminology and its applicability boundaries.
+- The selected drafting reference determines how locked content is assigned to standard fields, including field responsibilities, proportions, ordering, and formatting.
+- `hard-rules.md` determines the final shared formatting and expression rules.
 
-低优先级规则不得改变高优先级内容。原 Finding 与已确认类型不兼容、缺少完成 selected branch 所需的实质内容，或存在无法无损解释的矛盾时，停止并返回 `POLISH_BLOCKED`；不得补充事实、重新分类或弱化原结论。
+A lower-priority rule must not change higher-priority content. A revision instruction supplies only the change it explicitly expresses; it does not authorize the agent to derive new facts, Impact, Severity, remediation, or Evidence. Stop and return `POLISH_BLOCKED` when the resolved effective semantics are incompatible with the confirmed type, lack substantive content required by the selected branch, or contain an ambiguity or contradiction that cannot be resolved without semantic loss. Do not investigate, reclassify, weaken the original conclusion, or guess the user's intent.
 
 ## Workflow
 
-流程开始时创建一个本次 Finding 唯一的前缀，并使用 harness 提供、可被 child agent 读取的 `local://` 共享临时存储保存阶段产物，例如 `local://finding-polisher-<unique-id>-content.yaml`。所有阶段复用该前缀；只清理同一前缀下由本次流程创建的文件。
+At the start of the workflow, create a prefix unique to this Finding and use harness-provided `local://` shared temporary storage that child agents can read, such as `local://finding-polisher-<unique-id>-content.yaml`. Reuse the same prefix for every stage. Clean up only files created by this workflow under that prefix.
 
 ### 1. Validate the input
 
-输入必须包含：
+The input must contain:
 
-- 足以形成对应标准 Finding 的实质内容；内容可以是散文、列表、表格、旧模板、混合字段或其他结构；
-- 审计人员已经确认的唯一 Finding Type：`Security Issue`、`Recommendation` 或 `Note`。
+- an original Finding with enough substantive content to form the corresponding standard Finding; it may be prose, a list, a table, an old template, mixed fields, or another structure;
+- one Finding Type confirmed by the auditor: `Security Issue`, `Recommendation`, or `Note`; confirmation may appear in the original request or the latest explicit revision instruction;
+- optional revision instructions, which may be itemized feedback, natural-language directions, replacement passages, or located additions, replacements, and removals.
 
-不得因为输入缺少标准字段标签、字段顺序不同、同一语义散落在多处或包含额外 presentation wrapper 而阻塞。先按语义角色归一化内容，再由 selected branch 生成标准结构。
+Do not block merely because the input lacks standard field labels, uses a different field order, scatters one meaning across multiple locations, expresses revision instructions without a schema, or includes an extra presentation wrapper. Normalize the original Finding and revision instructions by semantic role before the selected branch produces the standard structure.
 
-Finding Type 没有明确提供时，只询问类型，不自行分类。输入缺少 branch contract 必需的实质语义，且只能通过仓库调查、Impact 评估或新的审计判断补齐时，只返回：
+If neither the request nor the revision instructions unambiguously confirm a Finding Type, ask only for the type; do not classify it. If the input lacks substantive semantics required by the branch contract and completing them would require repository investigation, Impact assessment, or a new audit judgment, return only:
 
 ```text
-POLISH_BLOCKED: <缺失或矛盾的具体语义>
+POLISH_BLOCKED: <specific missing or contradictory semantics>
 ```
 
-不得访问仓库验证输入，也不得把标准化请求升级为完整 finding-writing 流程。
+Do not access the repository to verify the original Finding or revision instructions, and do not escalate a standardization or revision request into the full finding-writing workflow.
 
-### 2. Build the Content Lock
+### 2. Resolve revision instructions
 
-逐项读取整个输入，建立格式无关且无损的 `Content Lock`。标题、字段标签、段落、列表、表格、前后说明和原有顺序只用于定位来源，不成为输出约束。至少记录：
+When no revision instructions exist, pass all substantive semantics from the original Finding to the next stage. When revision instructions exist, parse them in occurrence order into `add`, `replace`, or `remove` operations against the Finding's semantics, then compute the final effective semantics.
+
+Treat feedback as a revision instruction only when the user has confirmed that it should modify the Finding. Imperative change requests and suggestions under an explicit direction such as "revise the Finding according to the following feedback" are confirmed. Discussion, alternatives, and questions are not modification decisions. Every operation must have one unambiguous target and one unambiguous result:
+
+- `add` must supply the complete substantive semantics to add and where they relate to the retained content.
+- `replace` must uniquely identify both the content being replaced and the replacement semantics.
+- `remove` must uniquely identify the substantive claim to remove without implicitly deleting conditions, causal nodes, or boundaries required by retained claims.
+- Apply multiple confirmed instructions concerning the same content in occurrence order. A later explicit instruction overrides an earlier one.
+- An instruction overrides only its direct target. Preserve every untargeted original semantic unit.
+- Explicitly supplied new facts, Impact, remediation, Evidence, or other substantive content may enter the effective semantics. Do not expand them into conclusions the user did not express or recast an auditor revision as project confirmation.
+- When the user explicitly and unambiguously changes the Finding Type, use the new type. Merely questioning, comparing, or suggesting consideration of another type leaves the type unconfirmed.
+
+Requests such as "make it more severe," "add more impact," "make the suggestion specific," or "revise it according to best practices" do not supply unique new semantics and do not authorize the agent to complete them. If a target is unclear, a revision has multiple substantive interpretations, a removal leaves retained content without a unique meaning, or the complete instruction set remains contradictory, return only:
+
+```text
+POLISH_BLOCKED: revision instruction <R-id or verbatim fragment> is ambiguous or conflicts with <specific semantic unit>
+```
+
+Completion criteria: every confirmed revision instruction has been applied exactly once and is traceable; every untargeted semantic unit retains its original meaning; and the result has exactly one Finding Type and one internally consistent set of effective semantics.
+
+### 3. Build the Content Lock
+
+Read the entire original Finding and every resolved revision instruction, then build a format-independent, lossless `Content Lock`. Titles, field labels, paragraphs, lists, tables, surrounding explanations, and original ordering locate source content but do not constrain the output. Record at least:
 
 ```yaml
 content_lock:
-  finding_type: <confirmed type>
+  finding_type: <latest confirmed type>
   source_content: |-
     <verbatim input finding>
-  semantic_units:
-    - id: C1
+  revision_content: |-
+    <verbatim revision instructions or none>
+  source_semantic_units:
+    - id: S1
       subject: <subject>
       predicate: <predicate>
       object: <object>
@@ -77,46 +103,70 @@ content_lock:
       scope: <affected boundary>
       causal_role: <context | expected property | deviation | trigger | cause | result | impact | remediation | disclosure | evidence>
       source_span: <verbatim fragment or unambiguous location in source_content>
+  revision_instructions:
+    - id: R1
+      operation: <add | replace | remove>
+      targets: [<source or prior revision semantic unit ids>]
+      supplied_semantics: <explicit replacement or addition, or none for remove>
+      source_span: <verbatim fragment or unambiguous location in revision_content>
+  superseded_units:
+    - unit: <semantic unit id>
+      superseded_by: <revision instruction id>
+  semantic_units:
+    - id: E1
+      provenance: [<source semantic unit or revision instruction ids>]
+      subject: <subject>
+      predicate: <predicate>
+      object: <object>
+      polarity: <positive | negative>
+      condition: <condition or none>
+      modality: <certainty or capability>
+      scope: <affected boundary>
+      causal_role: <context | expected property | deviation | trigger | cause | result | impact | remediation | disclosure | evidence>
   immutable_relations:
-    - from: <semantic unit id>
+    - from: <effective semantic unit id>
       relation: <ordering | causality | contrast | dependency | responsibility | boundary>
-      to: <semantic unit id>
+      to: <effective semantic unit id>
   identifiers:
-    - value: <exact project identifier>
+    - value: <effective exact project identifier>
       semantic_type: <type if stated>
+      provenance: [<source semantic unit or revision instruction ids>]
   evidence_locations:
-    - value: <verbatim path and range if present>
-      supports: [<semantic unit ids>]
+    - value: <effective verbatim path and range if present>
+      supports: [<effective semantic unit ids>]
+      provenance: [<source semantic unit or revision instruction ids>]
   auditor_decisions:
     - <explicit decision present in the request>
 ```
 
-`Content Lock` 只能拆解输入语义，不能修正、补全或解释输入。必须保留：
+`source_semantic_units` only decomposes the original Finding. `revision_instructions` only decomposes explicit modifications. `semantic_units` is the sole effective semantic set after applying every modification in order. Terminology, drafting, and optimization may derive Finding prose only from `semantic_units`, their `immutable_relations`, effective identifiers, and effective Evidence. Use provenance to verify that every change originates in either the original Finding or an explicit revision instruction.
 
-- 每项实质主张及其否定关系；
-- actor、对象、责任方和受影响方；
-- 条件、触发、顺序、因果方向和路径边界；
-- Impact 的对象、范围、确定性、持续时间和可恢复性；
-- remediation 的目标及输入保留的实现自由；
-- 项目标识符、数值、版本、链、配置和部署条件；
-- 已提供 Evidence 的位置、范围及其支持的主张。
+The `Content Lock` must preserve the following dimensions of the effective semantics:
 
-不得把原字段归属、字段名称、段落顺序、重复 presentation 或 wrapper 文本当作实质语义。完全重复的主张在 `Content Lock` 中只记录一次并保留所有来源位置。若一段内容存在多种会改变实质含义的解释，只返回 `POLISH_BLOCKED`。将完整 `Content Lock` 写入唯一命名的临时文件。
+- every substantive claim and its negation;
+- actors, objects, responsible parties, and affected parties;
+- conditions, triggers, ordering, causal direction, and path boundaries;
+- the object, scope, certainty, duration, and recoverability of Impact;
+- the remediation objective and any implementation freedom retained by the input;
+- project identifiers, values, versions, chains, configurations, and deployment conditions;
+- every supplied Evidence location and range, and the claims it supports.
 
-### 3. Discover terminology
+Do not treat original field placement, field names, paragraph order, repeated presentation, or wrapper text as substantive semantics. Record a fully duplicated effective claim only once while retaining all provenance. If the effective content still permits multiple interpretations that would change substantive meaning, return `POLISH_BLOCKED`. Write the complete `Content Lock` to the uniquely named temporary file.
 
-读取并完整执行 `skill://finding-writer/references/terminology-discovery.md`。以原 Finding 和 `Content Lock` 代替 raw finding、`Fact Brief` 和可选 `Impact Brief`：
+### 4. Discover terminology
 
-- 仍须实际阅读至少 20 个不同来源；
-- 只研究 `Content Lock` 已有概念的准确术语；
-- 不得通过术语研究增加事实、机制、后果、条件或修复方案；
-- 没有准确术语时保留清楚的普通技术语言。
+Read and execute `skill://finding-writer/references/terminology-discovery.md` in full. Use the original Finding, revision instructions, and `Content Lock` in place of the raw finding, `Fact Brief`, and optional `Impact Brief`:
 
-将完整 `Terminology Brief` 写入唯一命名的临时文件。
+- Read at least 20 distinct sources as required by that reference.
+- Research only accurate terminology for concepts already present in the effective `Content Lock`.
+- Do not use terminology research to add facts, mechanisms, consequences, conditions, or remediation.
+- Retain clear ordinary technical language when no exact term exists.
 
-### 4. Redraft in the confirmed branch
+Write the complete `Terminology Brief` to the uniquely named temporary file.
 
-只读取已确认 Finding Type 对应的 drafting reference：
+### 5. Redraft in the confirmed branch
+
+Read only the drafting reference corresponding to the confirmed Finding Type:
 
 | Finding Type | Drafting reference |
 | --- | --- |
@@ -124,55 +174,57 @@ content_lock:
 | Recommendation | `skill://finding-writer/references/recommendation-drafting.md` |
 | Note | `skill://finding-writer/references/note-drafting.md` |
 
-以 `Content Lock` 代替该 reference 要求的 `Fact Brief` 和可选 `Impact Brief`，并与 `Terminology Brief` 一起作为输入。先建立 selected branch 的内部 Map，再把每个语义单位分配到该分支规定的标准字段。输入的字段名称、顺序和格式不得沿用为输出契约；最终输出必须采用 selected branch 的标准字段集合、职责、顺序和布局。
+Use the `Content Lock` in place of the `Fact Brief` and optional `Impact Brief` required by the drafting reference, together with the `Terminology Brief`. First build the selected branch's internal Map, then assign every effective semantic unit to the standard field responsible for it. The input's field names, ordering, and formatting do not define the output contract. The final output must use the standard fields, responsibilities, ordering, and layout of the selected branch.
 
-drafting 可以重组、拆分或合并句子，移动内容到职责正确的字段，删除 presentation wrapper 和完全重复的表达，并采用已验证术语；这些操作不得增加、删除、合并或拆分实质主张。输出中的每个实质主张都必须与 `Content Lock` 中的语义单位等义且可追溯。
+Drafting may reorganize, split, or combine sentences; move content to the field with the correct responsibility; remove presentation wrappers and exact duplication; and adopt verified terminology. These operations must not add, remove, merge, split, or reinterpret effective substantive claims. Every substantive output claim must be semantically equivalent to and traceable to a `Content Lock.semantic_units` entry.
 
-不得：
+Do not:
 
-- 改变 Finding Type、Impact、Severity 或 remediation；
-- 改变条件、情态强度、范围、因果关系或责任归属；
-- 新增、猜测或重新调查 Evidence 和 Code locations；
-- 为满足 branch contract 而补写输入没有的逻辑节点。
+- change the latest confirmed Finding Type or any effective Impact, Severity, or remediation;
+- change a condition, modal strength, scope, causal relationship, or responsibility assignment;
+- add, guess, or reinvestigate Evidence or Code locations;
+- invent a logical node absent from the effective semantics to satisfy the branch contract.
 
-若 selected branch 无法在不改变 `Content Lock` 的前提下产生完整 Draft，只返回：
-
-```text
-POLISH_DRAFTING_BLOCKED: <冲突的语义单位或缺失内容>
-```
-
-将完整 Draft 写入独立的唯一命名临时文件。
-
-### 5. Optimize in one fresh child agent
-
-每个完整 Draft 启动恰好一个 fresh child optimizer。只向它提供：
-
-- `skill://finding-writer/references/hard-rules.md`；
-- selected drafting reference；
-- `Content Lock` 临时文件；
-- `Terminology Brief` 临时文件；
-- Draft 临时文件。
-
-明确指定 `Content Lock` 是 optimizer 的 Authoritative Content Set。optimizer 只执行 hard rules，并逐项验证最终 Finding 与 `Content Lock` 语义等价。
-
-optimizer 返回阻塞信号时，将其规范化为：
+If the selected branch cannot produce a complete Draft without changing the `Content Lock`, return only:
 
 ```text
-POLISH_BLOCKED: <HR rule ID>: <冲突的语义单位或缺失内容>
+POLISH_DRAFTING_BLOCKED: <conflicting semantic unit or missing content>
 ```
 
-不得返回部分润色结果、候选版本、修改说明或新的审计问题。
+Write the complete Draft to a separate, uniquely named temporary file.
 
-### 6. Return and clean up
+### 6. Optimize in one fresh child agent
 
-optimizer 成功时，只返回完整 polished Finding，不附加解释、修改摘要或检查结果。
+Start exactly one fresh child optimizer for each complete Draft. Give it only:
 
-返回前确认：
+- `skill://finding-writer/references/hard-rules.md`;
+- the selected drafting reference;
+- the `Content Lock` temporary file;
+- the `Terminology Brief` temporary file;
+- the Draft temporary file.
 
-- Finding Type 未改变；
-- 每个输出实质主张都可逐项映射回 `Content Lock`；
-- 输入格式已经转换为 selected branch 的标准字段、顺序和布局；
-- 术语变化没有改变技术含义；
-- Impact、remediation 和 Evidence 未发生语义漂移；
-- 输出符合 selected branch 和全部 Hard Rules；
-- 所有本次临时文件已经清理。
+Explicitly designate `Content Lock.semantic_units`, their `immutable_relations`, effective identifiers, and effective Evidence as the optimizer's Authoritative Content Set. The optimizer must only execute the hard rules and verify each final Finding claim against the effective semantics and provenance.
+
+Normalize an optimizer blocking signal to:
+
+```text
+POLISH_BLOCKED: <HR rule ID>: <conflicting semantic unit or missing content>
+```
+
+Do not return a partially polished result, candidate versions, a change summary, or new audit questions.
+
+### 7. Return and clean up
+
+When the optimizer succeeds, return only the complete polished Finding, without an explanation, change summary, or check results.
+
+Before returning, confirm that:
+
+- the Finding Type equals the latest confirmed type;
+- every substantive output claim maps to an effective `Content Lock.semantic_units` entry and its provenance;
+- every confirmed revision instruction was applied exactly once and no superseded semantic unit remains in the output;
+- every untargeted original semantic unit retains its meaning;
+- the input structure has been converted to the selected branch's standard fields, ordering, and layout;
+- terminology changes did not change technical meaning;
+- Impact, remediation, and Evidence did not drift from the effective semantics;
+- the output satisfies the selected branch and every Hard Rule;
+- all temporary files created by this workflow have been removed.
