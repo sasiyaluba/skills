@@ -168,8 +168,8 @@ archive_shared_skill_roots
 
 : > "$skills_manifest"
 for skill_root in \
-  "$repo_dir/finding-writer" \
-  "$repo_dir/finding-polisher" \
+  "$repo_dir/finding-author" \
+  "$repo_dir/finding-refiner" \
   "$repo_dir/code-audit" \
   "$repo_dir/mattpocock-skills/skills" \
   "$repo_dir/web3-skills" \

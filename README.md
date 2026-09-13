@@ -29,8 +29,8 @@ The installer currently discovers **44 skills**. Every directory containing a `S
 | `contract-auditor` | Audit Solidity contracts for exploitable security issues. |
 | `client-auditor` | Review blockchain nodes, execution clients, consensus clients, bridges, P2P code, and RPC surfaces. |
 | `exploit-investigator` | Investigate an on-chain incident from a transaction hash and chain. |
-| `finding-writer` | Convert one raw audit finding into a repository-grounded issue, recommendation, or note. |
-| `finding-polisher` | Convert an audit finding in any structure into the standard report format without changing its confirmed meaning. |
+| `finding-author` | Write or substantively revise a repository-grounded Security Issue, Recommendation, or Note. |
+| `finding-refiner` | Standardize the format and expression of an existing finding without changing its substantive meaning. |
 
 ### Engineering workflow
 
@@ -161,4 +161,4 @@ If the Web3 fork is behind upstream, the script merges and pushes the updated fo
 - [`mattpocock/skills`](https://github.com/mattpocock/skills): engineering and productivity workflows.
 - [`DarkNavySecurity/web3-skills`](https://github.com/DarkNavySecurity/web3-skills): Web3 auditing and exploit investigation, maintained here through a customized fork.
 - [`sasiyaluba/thinking-partner`](https://github.com/sasiyaluba/thinking-partner): structured decision support and mental models.
-- Local additions: `finding-writer`, `finding-polisher`, shared agent instructions, installation, and update automation.
+- Local additions: `finding-author`, `finding-refiner`, shared agent instructions, installation, and update automation.
