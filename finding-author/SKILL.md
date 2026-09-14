@@ -63,6 +63,8 @@ Grounding is complete when every material project claim has claim-bound evidence
 
 Read the selected type contract and populate exactly one payload from the grounded facts, decisions, and conclusions. Then read `terminology.md`, resolve only terminology needed by that completed payload, and build the shortest complete semantic draft required by the type contract.
 
+The Finding Model is a completeness checklist, not a prose outline. Compose its facts as one coherent argument rather than emitting each semantic field as a separate sentence.
+
 For an existing finding or requested rewrite:
 
 - apply each explicit content change to its direct target;

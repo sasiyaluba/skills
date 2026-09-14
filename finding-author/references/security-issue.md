@@ -66,11 +66,13 @@ Repository locations must directly prove the root cause or a comparison necessar
 
 Populate the semantic render interface as follows:
 
-- `Title`: subject plus the distinguishing deviation or supported consequence.
-- `Description`: expected property, deviation, conditions, trigger, causal path, direct result, and the connection to impact and its boundary.
+- `Title`: concrete subject plus the actual deviation or supported consequence. Prefer the component and action that distinguish the issue over generic categories such as routing, handling, or validation.
+- `Description`: independently establish the expected property, deviation, conditions, trigger, causal path, direct result, and the connection to impact and its boundary.
 - `Impact`: the single impact conclusion.
 - `Suggestion`: the remediation goal.
 - `Code locations`: minimal direct repository evidence for the deviation.
+
+Draft the Description as one causal argument, not one sentence per semantic field. Establish the expected behavior and why it matters in this system, then state the condition that exposes the defect, include only the implementation facts needed to prove the deviation, and end with the direct security-relevant result. Use a reference implementation only when it helps establish the expected behavior, and integrate it into that contrast rather than presenting a parallel implementation walkthrough.
 
 This allocation defines content only. The refiner-owned rendering contract determines expression and presentation.
 
