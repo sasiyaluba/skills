@@ -5,16 +5,12 @@ description: Use when an auditor wants to turn a raw finding into a repository-g
 
 # Finding Author
 
-Author semantically complete, repository-grounded findings. This skill may establish or change substantive content from the auditor's instructions, repository evidence, and directly relevant authoritative sources.
-
-Its interface is:
+Author one semantically complete, repository-grounded `Security Issue`, `Recommendation`, or `Note` through a locked context and a sentence chain.
 
 ```text
-raw or existing finding + requested content changes + repository evidence + auditor decisions
-    -> report-ready finding
+raw or existing finding + requested changes + evidence + auditor decisions
+    -> locked Finding Context -> sentence chain -> report-ready finding
 ```
-
-Use exactly one type: `Security Issue`, `Recommendation`, or `Note`.
 
 ## References
 
@@ -22,73 +18,91 @@ Use exactly one type: `Security Issue`, `Recommendation`, or `Note`.
 | --- | --- |
 | Every finding | `skill://finding-author/references/finding-model.md` |
 | Grounding | `skill://finding-author/references/grounding.md` |
-| Terminology | `skill://finding-author/references/terminology.md` |
+| Context lock | `skill://finding-author/references/finding-context.md` |
 | Security Issue content | `skill://finding-author/references/security-issue.md` |
 | Recommendation content | `skill://finding-author/references/recommendation.md` |
 | Note content | `skill://finding-author/references/note.md` |
-| Render | `skill://finding-refiner/references/rendering.md` plus the matching type contract listed in Render |
+| Sentence construction | `skill://finding-author/references/sentence-drafting.md` |
+| Render | `skill://finding-refiner/references/rendering.md` and the matching type contract |
 
-Read the shared model and grounding reference for every finding. Read only the selected type contract. Rendering rules belong exclusively to `finding-refiner`.
+Read the shared model, grounding contract, and context contract for every finding. Read only the selected type contract. Read the sentence-construction and rendering contracts before drafting any output sentence.
 
 ## Authority
 
 Apply inputs in this order:
 
-1. the auditor's latest explicit decision controls the requested type, impact, severity, project position, and remediation choice it directly addresses;
+1. the auditor's latest explicit decision controls the type, impact, severity, project position, and remediation choice it directly addresses;
 2. repository and authoritative evidence control claims about code, specifications, dependencies, and actual behavior;
-3. derived conclusions must follow from identified facts and decisions;
-4. terminology changes expression only and cannot create substance.
+3. derived conclusions must follow from identified facts and decisions; and
+4. terminology controls expression only and cannot create substance.
 
-An auditor decision is not repository evidence. If an explicit decision conflicts with verified project behavior, identify the conflict rather than presenting the decision as a repository fact. Preserve accurate, untargeted content in an existing finding; re-ground it instead of treating the existing prose as authoritative.
+An auditor decision is not repository evidence. When a decision conflicts with verified project behavior, preserve both authorities explicitly and obtain the single controlling decision only when the conflict materially changes the finding. Preserve accurate untargeted content in an existing finding, but re-ground it rather than treating its prose as authoritative.
 
 ## Workflow
 
-### 1. Grounding
+### 1. Ground the matter
 
-Read `finding-model.md` and `grounding.md`. Investigate the finding through the relevant code, configuration, documentation, tests, dependencies, and authoritative sources. Resolve requested substantive edits against that evidence.
+Read `finding-model.md` and `grounding.md`. Investigate the smallest sufficient set of code, configuration, tests, project documentation, dependency source, specifications, and authoritative documentation. Read applicable project context and decision records when they exist; use their domain terms and preserve the scope and status of their decisions.
 
-Select one type from the grounded semantics:
+Separate grounded facts, auditor decisions, and derived conclusions. Bind every material project claim to evidence and establish all conditions, causal steps, boundaries, and certainty levels that affect the result.
+
+Grounding is complete only when every repository-answerable question is resolved and each remaining open question is an auditor judgment that would materially change a payload claim.
+
+### 2. Lock the Finding Context
+
+Read `finding-context.md`. Build one Finding Context from the grounded material before selecting wording, and select exactly one compatible type as part of locking that context. The locked context is the single source of truth for the rest of the run; it is internal working state and must not modify the audited project's `CONTEXT.md` or decision records unless the user explicitly requests that separate work.
+
+Use a docs-backed grill when terminology, expected behavior, project position, impact, severity, or remediation depends on unresolved auditor judgment. Map those decisions by dependency, ask only the current frontier, and include the evidence-backed recommended answer. Find facts in the repository and authoritative sources instead of asking the auditor to supply them. Skip the interview when the evidence and existing instructions uniquely determine the context.
+
+Use these type definitions during the lock:
 
 - **Security Issue:** an established deviation from an expected security property produces a concrete adverse security consequence.
-- **Recommendation:** a specific improvement closes an established gap, but no concrete security-property violation and adverse security consequence are established.
+- **Recommendation:** a specific improvement closes an established gap, but the evidence does not establish both a security-property violation and an adverse security consequence.
 - **Note:** an accepted design, trust, authority, dependency, deployment, or operating condition is disclosed without requesting a change.
 
-Severity does not determine type. A minor concrete security violation remains a Security Issue. A serious consequence can remain a Note when it occurs only if an accepted assumption fails and the audited implementation is not responsible for enforcing that assumption.
+Severity does not determine type.
 
-If the auditor supplied a type, preserve it when the evidence supports it. When an explicit type conflicts with grounded content, state the conflict and request the single controlling decision; do not silently reclassify it. If no type was supplied, select the uniquely supported type as a derived conclusion. Ask only when missing auditor judgment cannot be resolved from the request, repository, or authoritative sources and the answer would materially change the finding.
+Lock the context only when:
 
-Grounding is complete when every material project claim has claim-bound evidence; facts, auditor decisions, and derived conclusions remain distinguishable; all conditions and boundaries that affect the result are known; and a reader unfamiliar with the repository could understand the relevant behavior without inspecting the code.
+- the subject, actors, objects, states, conditions, boundaries, and exact relationships have stable meanings;
+- every recurring referent has one canonical term and every competing input term is mapped or rejected;
+- the selected type and its complete semantic chain are supported;
+- the intended conclusion follows from named facts and decisions; and
+- no unresolved decision can change a material sentence.
 
-### 2. Content
+### 3. Complete the selected payload
 
-Read the selected type contract and populate exactly one payload from the grounded facts, decisions, and conclusions. Then read `terminology.md`, resolve only terminology needed by that completed payload, and build the shortest complete semantic draft required by the type contract.
+Preserve an auditor-selected type when the evidence supports it. If an explicit type conflicts with the otherwise lockable context, identify the conflict and obtain the single controlling decision rather than silently reclassifying the finding.
 
-The Finding Model is a completeness checklist, not a prose outline. Compose its facts as one coherent argument rather than emitting each semantic field as a separate sentence.
+Read the selected type contract and complete its payload. For an existing finding, apply each requested content change to its direct target, preserve accurate untargeted semantics, correct stale claims, and recompute every dependent conclusion. Stronger wording never licenses stronger facts, impact, severity, or certainty.
 
-For an existing finding or requested rewrite:
+### 4. Construct the finding one sentence at a time
 
-- apply each explicit content change to its direct target;
-- preserve accurate untargeted claims, conditions, boundaries, identifiers, evidence, impact, and remediation;
-- correct unsupported or stale claims from current evidence;
-- recompute derived conclusions affected by a changed fact or auditor decision;
-- never turn a request for stronger wording into stronger facts, impact, severity, or certainty.
+Read `sentence-drafting.md`, the shared rendering contract, and the selected rendering contract. Create the exact type-specific output envelope before writing prose. Then construct one sentence, validate it, and add it to the accepted chain before considering the next sentence. Do not draft ahead.
 
-If grounded content is incompatible with a derived type, reclassify when the evidence uniquely determines the correct type. If the auditor explicitly selected the incompatible type, request the single controlling decision instead. Ask only when the choice depends on unresolved auditor intent or project policy and materially changes the finding.
+Each accepted sentence must:
 
-Content is complete when the shared metadata and selected payload satisfy their contracts; every conclusion is supported; impact and severity stay within realistic evidence; remediation closes the established cause or gap; and no field relies on the reader to infer a missing causal or boundary claim.
+- perform one field responsibility and one main semantic job;
+- use only concepts already available to the reader, while clearly establishing any new concept before a later sentence relies on it;
+- state a true and explicit logical relation to the preceding sentence, except for the first sentence in a field;
+- use the Finding Context's canonical terms, relations, conditions, scope, and certainty; and
+- already satisfy the applicable formal-English, identifier, modality, and field rules.
 
-### 3. Render
+When a sentence cannot pass, repair the context, semantic order, or sentence before continuing. A connective may express an established relation, but it cannot manufacture one. Formal prose is a construction constraint, not a final polishing pass.
 
-Read `skill://finding-refiner/references/rendering.md` and exactly one selected rendering contract:
+### 5. Render into the fixed envelope
 
-- `skill://finding-refiner/references/security-issue.md`
-- `skill://finding-refiner/references/recommendation.md`
-- `skill://finding-refiner/references/note.md`
+Derive the Title from the accepted Description rather than using it to introduce content. Populate Description from its accepted sentence chain. Populate Impact and Suggestion only when the selected contract permits them and only from their locked payload values. Populate Code locations only from claim-bound evidence.
 
-Render the completed Finding Model through those contracts. Rendering may reorganize information and rewrite expression, but it must preserve subject, predicate, object, polarity, conditions, scope, certainty, causal direction, impact, remediation, identifiers, and evidence. Do not add substantive content during rendering; return to Grounding or Content if the selected rendering contract exposes a semantic gap.
+Apply `finding-refiner` as a lossless rendering gate. Rendering may normalize expression and presentation, but it must preserve every subject, predicate, object, polarity, condition, scope, certainty, causal direction, impact, remediation constraint, identifier, and evidence binding. If rendering exposes a semantic gap, return to Grounding or the Finding Context instead of improvising content.
 
-Return only the rendered finding unless the user requested supporting analysis or a missing auditor judgment blocks completion.
+### 6. Validate in both directions
+
+Run the sentence-chain, semantic-equivalence, terminology, English, and structure checks from `sentence-drafting.md` and `finding-refiner`. Validate forward from the first Description sentence to the conclusion, then backward from Impact or the disclosed endpoint to ensure that every prerequisite and causal bridge appears earlier. Compare the final field labels and order byte-for-byte with the selected rendering envelope.
+
+Return only the rendered finding unless the user requested supporting analysis or one irreducible auditor decision blocks completion.
 
 ## Completion criterion
 
-The result is complete only when it has one compatible type, a complete selected payload, claim-bound evidence, resolved terminology where needed, a realistic impact for a Security Issue, severity metadata when supplied or explicitly requested, a root-cause or gap-closing remediation goal where the type requires one, and a render that satisfies the refiner-owned contracts without semantic drift.
+The result is complete only when one locked Finding Context supports one compatible payload; every material claim has claim-bound evidence; every sentence passed individually before the next was drafted; the complete chain is logically continuous in both directions; canonical terminology and formal written English are consistent across fields; impact, severity, and remediation remain within their authority; and the final output exactly matches the selected field contract.
+

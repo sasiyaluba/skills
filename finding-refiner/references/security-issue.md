@@ -26,6 +26,13 @@ Use this contract only when the authoritative type is `Security Issue`.
 
 Every field is required. If the authoritative input cannot supply one without new substantive work, block under the shared rendering contract.
 
+## Sentence chain
+
+Build Description through the following reachable jobs: establish the expected property and its authority; contrast the deviation or root cause; place conditions before the trigger or result they govern; walk the shortest complete causal path to the direct result; and connect that result to the authoritative Impact and its boundary. One sentence may cover adjacent jobs only when it retains one main claim and an explicit, independently checkable relation.
+Render the expected property as a direct proposition about its responsible subject. For a required function result, make the function the grammatical subject and state the condition and result directly; do not introduce `the contract of the function` or another abstract requirement wrapper absent from authoritative terminology.
+
+Impact and Suggestion begin new one-sentence chains whose prerequisite context is the accepted Description. Title is derived only after those body fields are accepted.
+
 ## Responsibilities
 
 - **Title** identifies the affected subject and its distinguishing deviation, root cause, or already-supported consequence. Use a noun phrase, not a remediation command. Do not add severity, an attacker, a type label, or a consequence absent from the input.

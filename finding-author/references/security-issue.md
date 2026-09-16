@@ -32,6 +32,7 @@ The chain is complete only when a reader can derive the impact without relying o
 ## Content derivation
 
 Establish the expected-versus-actual contrast from evidence. Do not treat a common defensive convention as the project's expected property. Distinguish an omitted check from an incorrectly implemented check, a root cause from the operation that exposes it, and a direct result from the ultimate impact.
+State the expected property as a direct proposition about the responsible subject and required behavior. When a function must return a particular result under a condition, name the function as subject and state that requirement directly. Do not turn the requirement into an abstract `contract` noun unless the evidence identifies a formal software contract as the actual authority.
 
 Introduce an actor only when the actor changes reachability or interpretation. Record the exact permission or role; do not strengthen an ordinary user path into an attacker-only path. Where no actor is needed, use the triggering state, event, or component.
 

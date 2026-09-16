@@ -18,6 +18,12 @@ Use this contract only when the authoritative type is `Note`.
 
 Every field is required. A Note has no Impact or Suggestion field; an authoritative conditional consequence remains in Description. If the input contains a substantive remediation request or cannot supply a required field without new substantive work, block under the shared rendering contract rather than deleting or reclassifying content.
 
+## Sentence chain
+
+Build Description through the following reachable jobs: establish the accepted context; state the operational assumption and boundary; then add only supplied responsibility, guarantee or non-guarantee, conditional consequence, and project position. A conditional consequence must follow its failed assumption. One sentence may cover adjacent jobs only when it retains one main claim and an explicit, independently checkable relation.
+
+Derive Title only after Description is accepted. Code locations remain evidence indexes and cannot supply a missing context, assumption, boundary, responsibility, guarantee, or consequence.
+
 ## Responsibilities
 
 - **Title** neutrally identifies the subject and its accepted design property, trust relationship, dependency, authority, guarantee boundary, deployment condition, or operational assumption. Use a noun phrase, not a defect allegation, consequence-only headline, quality judgment, or remediation command.

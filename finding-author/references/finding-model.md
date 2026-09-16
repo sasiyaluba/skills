@@ -1,42 +1,55 @@
 # Finding Model
 
-Use one minimal semantic model before rendering. It is an internal completeness contract, not an output template.
+Use one Finding Model as the internal representation of the locked Finding Context. It is a completeness contract, not an output template.
 
-## Shared metadata
+## Shared context
 
 ```yaml
 finding:
+  audience_prerequisites: [<concepts a report reader may know before sentence one>]
   type: Security Issue | Recommendation | Note
-  severity: <optional auditor-provided or rubric-derived metadata; rendered only when the caller requests metadata>
+  type_basis: <facts and decisions that distinguish this type>
+  severity: <optional auditor-provided or rubric-derived metadata>
   subject: <specific affected component, role, mechanism, dependency, or behavior>
+  thesis: <single conclusion the complete finding establishes>
   claims:
-    - statement: <one material semantic claim>
+    - id: <stable claim id>
+      statement: <one material semantic claim>
       status: grounded_fact | auditor_decision | derived_conclusion
       evidence: [<evidence ids supporting this claim>]
+  relationships:
+    - from: <claim, referent, state, or event>
+      relation: prerequisite | condition | trigger | cause | result | contrast | parallel | elaboration | conclusion | scope | responsibility
+      to: <claim, referent, state, or event>
   evidence:
-    - id: <stable local id>
+    - id: <stable evidence id>
       source: repository | auditor | authoritative_source
       location: <repo-relative path and range, auditor instruction, or source URL and section>
-      supports: [<specific claim ids or unambiguous claim descriptions>]
+      supports: [<claim ids>]
+  unresolved_decisions: []
   code_locations:
     state: ranges | protocol_level | no_repository_location
     ranges: [<repo-relative closed ranges when state is ranges>]
-  terminology: # optional
-    - term: <adopted term>
-      meaning: <meaning used here>
-      applies_to: <claim or concept>
-      source: <project or authoritative definition>
+  terminology:
+    - term: <canonical prose term>
+      meaning: <referent denoted in this finding>
+      applies_to: <claim, entity, role, mechanism, or other concept>
+      source: <project, dependency, authority, auditor decision, or ordinary technical language>
       boundary: <where the term does and does not apply>
+      avoid: [<rejected alternatives already present in the input or draft>]
   payload: <exactly one type payload>
 ```
 
-A claim's `status` identifies its authority without constructing a provenance graph:
+`audience_prerequisites` contains only knowledge the intended report reader can reasonably bring. Project-specific behavior, local identifiers, special assumptions, and finding-specific causal relations must be introduced by an accepted sentence before a later sentence relies on them.
 
-- **grounded fact:** directly supported by repository behavior or a reviewed authoritative source;
-- **auditor decision:** an explicit classification, expectation, impact, severity, remediation, or project-position decision supplied by the auditor;
-- **derived conclusion:** a necessary conclusion from named grounded facts and auditor decisions.
+A claim's status identifies its authority without constructing a provenance graph: `grounded_fact` is directly supported by repository behavior or a reviewed authoritative source; `auditor_decision` is an explicit classification, expectation, impact, severity, remediation, or project-position decision; and `derived_conclusion` necessarily follows from named facts and decisions.
 
-Bind evidence to the claim it proves. File presence, a broad contract range, passing tests, or a list of links is not evidence for every claim nearby. Preserve exact identifiers, quantities, versions, chains, configurations, timing, and deployment scope.
+Bind evidence to the exact claim it proves. File presence, a broad contract range, passing tests, or a list of links is not evidence for every nearby claim. Preserve exact identifiers, quantities, versions, chains, configurations, timing, and deployment scope.
+
+Record relationships explicitly. Sentence order may express only relationships present in this map; adjacency alone never creates causation, contrast, sequence, or scope.
+
+The context is locked only when `unresolved_decisions` is empty and the thesis follows from the complete selected payload. New evidence or a new auditor decision unlocks the context and invalidates every draft sentence whose claim, terminology, relation, condition, or boundary it changes.
+
 
 ## Type payloads
 

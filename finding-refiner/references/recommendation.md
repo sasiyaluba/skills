@@ -32,6 +32,12 @@ When the authoritative content already includes a distinct, bounded non-security
 
 Impact is otherwise omitted. All other fields are required. If the authoritative input cannot supply a required field without new substantive work, block under the shared rendering contract.
 
+## Sentence chain
+
+Build Description through the following reachable jobs: establish current behavior; state the supported target and precise gap; then establish the direct project-specific rationale. Put lifecycle and scope conditions before the job they constrain. One sentence may cover adjacent jobs only when it retains one main claim and an explicit, independently checkable relation.
+
+When authoritative content supplies a qualifying bounded non-security consequence, Impact begins a new one-sentence chain with Description as prerequisite context. Suggestion does the same for the remediation goal. Derive Title only after the body fields are accepted.
+
 ## Responsibilities
 
 - **Title** identifies the affected subject and distinguishing improvement. Prefer an imperative phrase when it does not imply a new implementation choice; otherwise use a precise non-security gap phrase. Do not add severity, exploit language, a type label, or a security consequence.
