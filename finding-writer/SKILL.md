@@ -64,6 +64,10 @@ Suggestion 用于 Issue 和 Recommendation，固定为 1 句话，说明应当�
 - 多个动作只有在共同服务于同一个修复目标时才能并列。
 - 不加入与当前 Finding 无关的额外改进。
 
+## Feedback
+
+仅当用户提供项目方反馈时包含 Feedback。Feedback 固定为 1 句话，并且必须以 `The project` 开头。该句必须忠实表达项目方的原意，不得加入评价、推断或用户未提供的承诺。
+
 ## Title
 
 Title 在正文完成后拟写，不得引入新的事实、影响或修复要求。
@@ -115,13 +119,14 @@ Title 在正文完成后拟写，不得引入新的事实、影响或修复要�
 4. 锁定上下文、问题、必要条件、直接结果，以及适用时的最终影响和修复目标。
 5. 按因果顺序构造 Description，并逐句确认语义职责和前后关系。
 6. Issue 写 Impact；Issue 和 Recommendation 写 Suggestion。
-7. 从完成的正文提取 Title，并应用对应类型的标题规则。
-8. 删除重复和无关背景，确认压缩没有破坏因果链。
+7. 用户提供项目方反馈时写 Feedback。
+8. 从完成的正文提取 Title，并应用对应类型的标题规则。
+9. 删除重复和无关背景，确认压缩没有破坏因果链。
 
 ## 完成标准
 
 - 用户已明确确认 Finding 类型，且字段集合与该类型一致。
-- Description、Impact、Suggestion 和 Title 均通过各自的内容与长度契约。
+- Description、Impact、Suggestion、Feedback 和 Title 均通过各自适用的内容与长度契约。
 - Description 因果连续，每句话只有一个主要语义职责。
 - Title 与正文指向同一个核心。
 - 全文满足写作要求。
