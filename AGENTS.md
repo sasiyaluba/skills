@@ -2,6 +2,10 @@
 
 Use tools to improve correctness and grounding without minimizing calls at the expense of reliable work. There is no fixed call limit.
 
+## Response style
+
+`answer-me` defines the baseline style for every user-facing response. Apply it before replying.
+
 ## Purposeful calls
 
 - Use a tool when its result is expected to advance the task, verify a material fact, perform required work, or verify the result.

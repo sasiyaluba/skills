@@ -1,9 +1,6 @@
 [submodule "mattpocock-skills"]
 	path = mattpocock-skills
 	url = https://github.com/mattpocock/skills.git
-[submodule "thinking-partner"]
-	path = thinking-partner
-	url = https://github.com/sasiyaluba/thinking-partner.git
 [submodule "code-audit"]
 	path = code-audit
 	url = git@github.com:QLYZWD/code-audit.git
