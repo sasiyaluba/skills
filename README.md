@@ -6,12 +6,13 @@ A focused AI workflow for **Codex**, **Claude Code**, **Oh My Pi**, and **Pi**.
 
 | Workflow | Source | Purpose |
 | --- | --- | --- |
-| Ask AI | [`answer-me`](./answer-me/) | Baseline response contract: complete first, then concise. |
 | Development | [`mattpocock-skills`](./mattpocock-skills/) | Engineering workflows for planning, implementation, debugging, testing, review, and design. |
 | Audit | [`code-audit`](./code-audit/) | Risk-oriented security audit orchestration. |
 | Finding output | [`finding-writer`](./finding-writer/) | Write audit-report Issues, Recommendations, and Notes. |
+| Attention control | [`attention-control`](./attention-control/skills/attention-control/) | ADHD-friendly output control, enabled only by explicit invocation. |
+| Socratic teaching | [`socrates`](./socrates/) | Question-led teaching, enabled only by explicit invocation. |
 
-Only these four workflow sources are installed. `mattpocock-skills` contains multiple individual skills; the other three sources each provide one skill.
+These five workflow sources are installed. `mattpocock-skills` contains multiple individual skills; the other sources each provide one skill.
 
 ## Install
 
@@ -37,8 +38,8 @@ cd tao-skills
 
 The installer:
 
-1. Initializes and updates the `code-audit` and `mattpocock-skills` submodules.
-2. Discovers skills only from the four workflow sources listed above.
+1. Initializes and updates the `code-audit`, `attention-control`, and `mattpocock-skills` submodules.
+2. Discovers skills only from the five workflow sources listed above.
 3. Rejects duplicate skill names.
 4. Detects supported agents from their executable or configuration directory.
 5. Links the selected skills into each detected agent.
@@ -73,4 +74,6 @@ git pull --recurse-submodules
 
 - [`QLYZWD/code-audit`](https://github.com/QLYZWD/code-audit): security audit orchestration.
 - [`mattpocock/skills`](https://github.com/mattpocock/skills): engineering workflows.
-- Local skills: `answer-me` and `finding-writer`.
+- [`aaddrick/attention-control`](https://github.com/aaddrick/attention-control): ADHD-friendly output control, enabled only by explicit invocation.
+- Local skill: `finding-writer`.
+- Adapted local skill: `socrates`, sourced from [`bevibing/socrates-skill`](https://github.com/bevibing/socrates-skill).

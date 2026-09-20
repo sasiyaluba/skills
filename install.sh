@@ -70,9 +70,10 @@ reset_exclusive_skills_directory() {
 
 : > "$skills_manifest"
 for skill_root in \
-  "$repo_dir/answer-me" \
   "$repo_dir/finding-writer" \
   "$repo_dir/code-audit" \
+  "$repo_dir/socrates" \
+  "$repo_dir/attention-control/skills/attention-control" \
   "$repo_dir/mattpocock-skills/skills"
 do
   if [ ! -d "$skill_root" ]; then
