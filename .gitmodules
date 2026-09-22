@@ -4,6 +4,3 @@
 [submodule "code-audit"]
 	path = code-audit
 	url = git@github.com:QLYZWD/code-audit.git
-[submodule "attention-control"]
-	path = attention-control
-	url = https://github.com/aaddrick/attention-control.git
